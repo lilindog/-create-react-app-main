@@ -5,11 +5,28 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+
+/**
+ *
+ * 1. 缺省设置进程的BABEL、NODE 为开发模式 "development"
+ * 2. 初始化env，详见env.js
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+
 // @remove-on-eject-end
 'use strict';
 
 // Do this as the first thing so that any code reading it knows the right env.
 /**
+ * step1
+ *
  * 缺省node、babel环境变量为 "开发模式"
  **/
 process.env.BABEL_ENV = 'development';
@@ -24,7 +41,11 @@ process.on('unhandledRejection', err => {
 });
 
 // Ensure environment variables are read.
-/** 执行、加载env */
+/**
+ * step2
+ *
+ * 执行、加载env
+ */
 require('../config/env');
 
 const fs = require('fs');

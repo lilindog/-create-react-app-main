@@ -5,6 +5,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 // @remove-on-eject-end
 'use strict';
 
@@ -17,7 +18,8 @@ const paths = require('./paths');
 delete require.cache[require.resolve('./paths')];
 
 /** 读取NODE_ENV 一般为 development 或 production */
-const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV; // 缺省为 "development"
+/** 没有初始化NODE环境变量，抛错，退出进程 */
 if (!NODE_ENV) {
   throw new Error(
     'The NODE_ENV environment variable is required but was not specified.'
@@ -46,14 +48,23 @@ const dotenvFiles = [
 // https://github.com/motdotla/dotenv-expand
 /**
  * 加载上面列出的所有的dotenv文件
- * 到环境变量
+ * 到进程环境变量
  */
 dotenvFiles.forEach(dotenvFile => {
   if (fs.existsSync(dotenvFile)) {
+
     require('dotenv-expand')(
+
+      /**
+       * 读取环境变量合并到进程
+       * 同时也返回一份, 返回的结构变成了：
+       *    { poarsed: { [key: string]: any } }
+       *    参见dotenv源码 95行 https://github.com/motdotla/dotenv/blob/master/lib/main.js
+       */
       require('dotenv').config({
         path: dotenvFile,
       })
+
     );
   }
 });
