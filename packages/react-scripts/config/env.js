@@ -61,6 +61,8 @@ dotenvFiles.forEach(dotenvFile => {
      * 与require('dotenv').config() 不同的是：
      *
      * 若值存在${key:-defaultValue} 则替换为进程变量中存在的对应值, 或defaultValue 或 ''
+     *
+     * 参考dotenv-expand源码： https://github.com/motdotla/dotenv-expand/blob/master/lib/main.js
      */
     require('dotenv-expand')(
 
