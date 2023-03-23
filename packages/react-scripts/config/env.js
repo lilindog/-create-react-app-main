@@ -53,10 +53,19 @@ const dotenvFiles = [
 dotenvFiles.forEach(dotenvFile => {
   if (fs.existsSync(dotenvFile)) {
 
+    /**
+     * 增加内层返回的 { prsed: { [key: string]: string } } 环境变量到进程
+     * 同名则使用进程原有的
+     *
+     *
+     * 与require('dotenv').config() 不同的是：
+     *
+     * 若值存在${key:-defaultValue} 则替换为进程变量中存在的对应值, 或defaultValue 或 ''
+     */
     require('dotenv-expand')(
 
       /**
-       * 读取环境变量合并到进程
+       * 读取指定文件环境变量 合并 到进程
        * 同时也返回一份, 返回的结构变成了：
        *    { poarsed: { [key: string]: any } }
        *    参见dotenv源码 95行 https://github.com/motdotla/dotenv/blob/master/lib/main.js
