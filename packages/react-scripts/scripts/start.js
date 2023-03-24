@@ -10,7 +10,7 @@
 /**
  *
  * 1. 缺省设置进程的BABEL、NODE 为开发模式 "development"
- * 2. 初始化env，详见env.js
+ * 2. 初始化env，将项目的一对相关的.env文件赋值到进程，详见env.js
  *
  *
  *
@@ -44,15 +44,22 @@ process.on('unhandledRejection', err => {
 /**
  * step2
  *
- * 执行、加载env
+ * 初始化env，将项目的一对相关的.env文件赋值到进程
  */
 require('../config/env');
 
 const fs = require('fs');
+
+/** 就是chalk包，react-dev-utils/chalk 做了间接导出而已 */
 const chalk = require('react-dev-utils/chalk');
+
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
+
+/** 清空终端的函数 */
 const clearConsole = require('react-dev-utils/clearConsole');
+
+/** 检测文件路径集合是否都存在的函数，全存在返回true，反之返回false */
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
 const {
   choosePort,
@@ -60,10 +67,21 @@ const {
   prepareProxy,
   prepareUrls,
 } = require('react-dev-utils/WebpackDevServerUtils');
+
+/** 使用浏览器打开url的工具函数 */
 const openBrowser = require('react-dev-utils/openBrowser');
+
+/** 校验、比对版本号的工具模块 */
 const semver = require('semver');
 const paths = require('../config/paths');
+
+/**
+ * 动态生成生成配置，该工厂函数生成开发环境的webpack主要配置，
+ * 需要传入 "development" 或 "production"
+ * 返回Object结构的配置
+ */
 const configFactory = require('../config/webpack.config');
+
 const createDevServerConfig = require('../config/webpackDevServer.config');
 const getClientEnvironment = require('../config/env');
 const react = require(require.resolve('react', { paths: [paths.appPath] }));

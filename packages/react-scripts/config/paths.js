@@ -49,6 +49,11 @@ const moduleFileExtensions = [
 ];
 
 // Resolve file paths in the same order as webpack
+/**
+ * 查找指定目录下的指定名称的文件，自动去比对扩展名，比中即返回
+ * 优先级看上面的moduleFileExtensions
+ * 没有比中则 默认扩展名为.js
+ */
 const resolveModule = (resolveFn, filePath) => {
   const extension = moduleFileExtensions.find(extension =>
     fs.existsSync(resolveFn(`${filePath}.${extension}`))
@@ -89,6 +94,11 @@ module.exports = {
 const resolveOwn = relativePath => path.resolve(__dirname, '..', relativePath);
 
 // config before eject: we're in ./node_modules/react-scripts/config/
+/**
+ *
+ * 一般情况下会用到这个配置（非eject时）
+ *
+ */
 module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
@@ -126,13 +136,23 @@ const reactScriptsLinked =
 
 // config before publish: we're in ./packages/react-scripts/config/
 /**
+ * ！在真正使用时，不会用到此处的配置
+ *
+ *
  * 当前包路径不是软连接
  * 并且
  * 当前目录路径中包含 pakcgaes/react-scripts/config时
  */
 if (
   !reactScriptsLinked &&
-  __dirname.indexOf(path.join('packages', 'react-scripts', 'config')) !== -1
+
+    /**
+     *
+     * 这个条件限制了，只有在这个项目作为开发时才会使用以下配置
+     * 因为在安装的时候，该包安装到项目里node_modules时，不会存在与packages目录下面
+     *
+     */
+    __dirname.indexOf(path.join('packages', 'react-scripts', 'config')) !== -1
 ) {
   const templatePath = '../cra-template/template';
   module.exports = {

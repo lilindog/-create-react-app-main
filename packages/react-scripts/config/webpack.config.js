@@ -11,6 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+/** cjs require.resolve() 算法的实现，作用基本相同 */
 const resolve = require('resolve');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');

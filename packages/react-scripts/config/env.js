@@ -27,6 +27,17 @@ if (!NODE_ENV) {
 }
 
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
+/**
+ * 1. 开发模式（development）会尝试（不存在就不引）引入的env文件：
+ *  .env.development.local
+ *  .env.local
+ *  .env.development
+ *  .env
+ *
+ * 2. 打包模式 ？暂未读到！
+ *
+ *
+ */
 const dotenvFiles = [
   /** 包含 ${projrct}/.env.development.local */
   `${paths.dotenv}.${NODE_ENV}.local`,
@@ -47,20 +58,19 @@ const dotenvFiles = [
 // https://github.com/motdotla/dotenv
 // https://github.com/motdotla/dotenv-expand
 /**
- * 加载上面列出的所有的dotenv文件
- * 到进程环境变量
+ * 加载上面列出的所有的dotenv文件 到进程环境变量
  */
 dotenvFiles.forEach(dotenvFile => {
   if (fs.existsSync(dotenvFile)) {
 
     /**
      * 增加内层返回的 { prsed: { [key: string]: string } } 环境变量到进程
-     * 同名则使用进程原有的
+     * 同名则使用进程环境变量原有的
      *
      *
-     * 与require('dotenv').config() 不同的是：
+     * ! 但是与require('dotenv').config()行为 不同的是：
      *
-     * 若值存在${key:-defaultValue} 则替换为进程变量中存在的对应值, 或defaultValue 或 ''
+     * 若值存在 "xxx$key:-111$key1:-222" 则替换$key不分为进程变量中存在的对应值, 或defaultValue 或 ''
      *
      * 参考dotenv-expand源码： https://github.com/motdotla/dotenv-expand/blob/master/lib/main.js
      */
@@ -89,13 +99,28 @@ dotenvFiles.forEach(dotenvFile => {
 // Otherwise, we risk importing Node.js core modules into an app instead of webpack shims.
 // https://github.com/facebook/create-react-app/issues/1023#issuecomment-265344421
 // We also resolve them to make sure all tools using them work consistently.
+
+/** 项目目录，也就是进程的工作目录，若是符号链接则转换位真实目录地址 */
 const appDirectory = fs.realpathSync(process.cwd());
-/** 检查NODE_PATH 环境变量的合法性，过滤掉不合法的 */
+
+/**
+ *
+ * 处理 NODE_PATH 上的全局模块目录路径地址
+ * 筛选只是相对路径的，然后与当前项目目录路径拼接后 在赋值回 NODE_PATH
+ *
+ */
 process.env.NODE_PATH = (process.env.NODE_PATH || '')
   .split(path.delimiter)
   .filter(folder => folder && !path.isAbsolute(folder))
   .map(folder => path.resolve(appDirectory, folder))
   .join(path.delimiter);
+
+
+/***
+ *
+ * ！！ start.js 中的env初始化到这里就结束了
+ *
+ */
 
 // Grab NODE_ENV and REACT_APP_* environment variables and prepare them to be
 // injected into the application via DefinePlugin in webpack configuration.
@@ -104,7 +129,7 @@ const REACT_APP = /^REACT_APP_/i;
 
 /**
  *
- * 导出主函数
+ * 导出主函数, 初始化env用不到
  *
  */
 function getClientEnvironment(publicUrl) {
