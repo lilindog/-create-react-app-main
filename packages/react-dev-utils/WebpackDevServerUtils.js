@@ -12,8 +12,11 @@ const path = require('path');
 const url = require('url');
 const chalk = require('chalk');
 const detect = require('detect-port-alt');
+
+/** 是否是root级别用户，这一个包3行代码 这TM，根据linux用户uid来做判断 */
 const isRoot = require('is-root');
 const prompts = require('prompts');
+/** 清空终端 */
 const clearConsole = require('./clearConsole');
 const formatWebpackMessages = require('./formatWebpackMessages');
 const getProcessForPort = require('./getProcessForPort');
@@ -388,19 +391,31 @@ function prepareProxy(proxy, appPublicFolder, servedPathname) {
   ];
 }
 
+
+/**
+ * 检查期望端口，空闲则立即返回，否则询问用户，
+ * 根据用户的选择来返回其他空闲port或null
+ */
 function choosePort(host, defaultPort) {
+  /** detect 以传入port开始+10范围（超过此范围貌似会从0开始），查找可用的port并返回 */
   return detect(defaultPort, host).then(
     port =>
       new Promise(resolve => {
+        /** port可用，则直接返回 */
         if (port === defaultPort) {
           return resolve(port);
         }
+
+        /** port不可用的提示信息 */
         const message =
           process.platform !== 'win32' && defaultPort < 1024 && !isRoot()
             ? `Admin permissions are required to run a server on a port below 1024.`
             : `Something is already running on port ${defaultPort}.`;
+
+        /** 期望端口被占用，让用户妥协，用户选择是则返回新的端口，否则返回null */
         if (isInteractive) {
           clearConsole();
+          /** 端口已运行的进程信的息文本 */
           const existingProcess = getProcessForPort(defaultPort);
           const question = {
             type: 'confirm',
@@ -420,6 +435,7 @@ function choosePort(host, defaultPort) {
             }
           });
         } else {
+          /** 打印警告，返回null */
           console.log(chalk.red(message));
           resolve(null);
         }

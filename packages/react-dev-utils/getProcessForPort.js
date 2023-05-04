@@ -70,6 +70,10 @@ function getDirectoryOfProcessById(processId) {
   ).trim();
 }
 
+/**
+ * 根据端口获取进程信息
+ * 使用命令来获取相关信息构造成string返回，方便外层逻辑打印给用户查看
+ */
 function getProcessForPort(port) {
   try {
     var processId = getProcessIdOnPort(port);

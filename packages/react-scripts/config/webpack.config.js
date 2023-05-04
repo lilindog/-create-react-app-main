@@ -14,6 +14,7 @@ const webpack = require('webpack');
 /** cjs require.resolve() 算法的实现，作用基本相同 */
 const resolve = require('resolve');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+/** 路径大小写检查、处理插件 （mac path大小写不敏感问题）*/
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 const TerserPlugin = require('terser-webpack-plugin');
