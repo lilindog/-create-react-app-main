@@ -13,6 +13,11 @@ class InlineChunkHtmlPlugin {
     this.tests = tests;
   }
 
+  /**
+   * 这个插件就干一件事
+   *
+   * 把src引入的脚本替换为嵌入
+   */
   getInlinedTag(publicPath, assets, tag) {
     if (tag.tagName !== 'script' || !(tag.attributes && tag.attributes.src)) {
       return tag;

@@ -22,6 +22,10 @@ class InterpolateHtmlPlugin {
     this.replacements = replacements;
   }
 
+  /**
+   *  该插件替用于 替换html 的指定值
+   *  { "key": "value" } 将html种的key部分，替换成value部分
+   */
   apply(compiler) {
     compiler.hooks.compilation.tap('InterpolateHtmlPlugin', compilation => {
       this.htmlWebpackPlugin

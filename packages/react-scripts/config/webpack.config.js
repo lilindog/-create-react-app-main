@@ -16,13 +16,21 @@ const resolve = require('resolve');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 /** 路径大小写检查、处理插件 （mac path大小写不敏感问题）*/
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+/** 该插件用于把html种的src引入的脚本改为嵌入 */
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
+/** 压缩js的插件，wpk5自带，自定义仍需单独安装引入 */
 const TerserPlugin = require('terser-webpack-plugin');
+/** 提取css的插件，单独提取到文件 */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+/** 压缩css的插件 */
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+/** 生成静态资源清单的插件 */
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+/** 替换hrml中指定值的插件 */
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+/** pwa 相关插件*/
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
+/** 暂不清楚内部声所用钩子的出入参，无法精确推断，明天继续 */
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const ESLintPlugin = require('eslint-webpack-plugin');
